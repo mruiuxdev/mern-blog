@@ -1,2 +1,2 @@
-# mern-blog
+# blog-mern
  
