@@ -3,289 +3,290 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const notifySuccess = (msg = "New category added successfully") =>
-  toast.success(msg, {
-    position: toast.POSITION.BOTTOM_LEFT,
-  });
+	toast.success(msg, {
+		position: toast.POSITION.BOTTOM_LEFT,
+	});
 const notifyFailed = (msg = "Something went wrong, try again") =>
-  toast.error(msg, {
-    position: toast.POSITION.BOTTOM_LEFT,
-  });
+	toast.error(msg, {
+		position: toast.POSITION.BOTTOM_LEFT,
+	});
 
 const isCategoryAddedAction = createAction("/category/isAdded");
 
 export const addCategory = createAsyncThunk(
-  "/category",
-  async (category, { rejectWithValue, getState, dispatch }) => {
-    const {
-      user: {
-        userAuth: { token },
-      },
-    } = getState();
+	"/category",
+	async (category, { rejectWithValue, getState, dispatch }) => {
+		const {
+			user: {
+				userAuth: { token },
+			},
+		} = getState();
 
-    try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_URL_API}/category`,
-        { title: category?.title },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+		try {
+			const { data } = await axios.post(
+				`${process.env.REACT_APP_URL_API}/category`,
+				{ title: category?.title },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
-      notifySuccess();
+			notifySuccess();
 
-      dispatch(isCategoryAddedAction());
+			dispatch(isCategoryAddedAction());
 
-      return data;
-    } catch (err) {
-      if (!err?.response) throw err;
+			return data;
+		} catch (err) {
+			if (!err?.response) throw err;
 
-      notifyFailed();
+			notifyFailed();
 
-      return rejectWithValue(err?.response?.data);
-    }
-  }
+			return rejectWithValue(err?.response?.data);
+		}
+	}
 );
 
 export const categories = createAsyncThunk(
-  "/categories",
-  async (categories, { rejectWithValue, getState, dispatch }) => {
-    const {
-      user: {
-        userAuth: { token },
-      },
-    } = getState();
+	"/categories",
+	async (categories, { rejectWithValue, getState, dispatch }) => {
+		const {
+			user: {
+				userAuth: { token },
+			},
+		} = getState();
 
-    try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL_API}/categories`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+		try {
+			const { data } = await axios.get(
+				`${process.env.REACT_APP_URL_API}/categories`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
-      return data;
-    } catch (err) {
-      if (!err?.response) throw err;
+			return data;
+		} catch (err) {
+			if (!err?.response) throw err;
 
-      return rejectWithValue(err?.response?.data);
-    }
-  }
+			return rejectWithValue(err?.response?.data);
+		}
+	}
 );
 
 export const getCategory = createAsyncThunk(
-  "category/details",
-  async (categoryId, { rejectWithValue, getState, dispatch }) => {
-    const {
-      user: {
-        userAuth: { token },
-      },
-    } = getState();
+	"category/details",
+	async (categoryId, { rejectWithValue, getState, dispatch }) => {
+		const {
+			user: {
+				userAuth: { token },
+			},
+		} = getState();
 
-    try {
-      const { data } = await axios.get(
-        `${process.env.REACT_APP_URL_API}/category/${categoryId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+		try {
+			const { data } = await axios.get(
+				`${process.env.REACT_APP_URL_API}/category/${categoryId}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
-      return data;
-    } catch (err) {
-      if (!err?.response) throw err;
+			return data;
+		} catch (err) {
+			if (!err?.response) throw err;
 
-      return rejectWithValue(err?.response?.data);
-    }
-  }
+			return rejectWithValue(err?.response?.data);
+		}
+	}
 );
 
 const isCategoryUpdatedAction = createAction("/category/isUpdated");
 
 export const updateCategory = createAsyncThunk(
-  "category/update",
-  async (category, { rejectWithValue, getState, dispatch }) => {
-    const {
-      user: {
-        userAuth: { token },
-      },
-    } = getState();
+	"category/update",
+	async (category, { rejectWithValue, getState, dispatch }) => {
+		const {
+			user: {
+				userAuth: { token },
+			},
+		} = getState();
 
-    const { categoryId, title } = category;
+		const { categoryId, title } = category;
 
-    try {
-      const { data } = await axios.put(
-        `${process.env.REACT_APP_URL_API}/category/${categoryId}`,
-        { title },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+		try {
+			const { data } = await axios.put(
+				`${process.env.REACT_APP_URL_API}/category/${categoryId}`,
+				{ title },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
-      dispatch(isCategoryUpdatedAction());
+			dispatch(isCategoryUpdatedAction());
 
-      notifySuccess("Category updated successfully");
+			notifySuccess("Category updated successfully");
 
-      return data;
-    } catch (err) {
-      if (!err?.response) throw err;
+			return data;
+		} catch (err) {
+			if (!err?.response) throw err;
 
-      notifyFailed();
+			notifyFailed();
 
-      return rejectWithValue(err?.response?.data);
-    }
-  }
+			return rejectWithValue(err?.response?.data);
+		}
+	}
 );
 
 const isCategoryDeletedAction = createAction("/category/isDeleted");
 
 export const deleteCategory = createAsyncThunk(
-  "category/delete",
-  async (category, { rejectWithValue, getState, dispatch }) => {
-    const {
-      user: {
-        userAuth: { token },
-      },
-    } = getState();
+	"category/delete",
+	async (category, { rejectWithValue, getState, dispatch }) => {
+		const {
+			user: {
+				userAuth: { token },
+			},
+		} = getState();
 
-    const { categoryId } = category;
-    try {
-      const { data } = await axios.delete(
-        `${process.env.REACT_APP_URL_API}/category/${categoryId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+		const { categoryId } = category;
+		try {
+			const { data } = await axios.delete(
+				`${process.env.REACT_APP_URL_API}/category/${categoryId}`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
-      dispatch(isCategoryDeletedAction());
+			dispatch(isCategoryDeletedAction());
 
-      notifySuccess("Category deleted successfully");
+			notifySuccess("Category deleted successfully");
 
-      return data;
-    } catch (err) {
-      if (!err?.response) throw err;
+			return data;
+		} catch (err) {
+			if (!err?.response) throw err;
 
-      return rejectWithValue(err?.response?.data);
-    }
-  }
+			return rejectWithValue(err?.response?.data);
+		}
+	}
 );
 
 const categoriesSlices = createSlice({
-  name: "category",
-  initialState: {},
-  extraReducers: (builder) => {
-    builder.addCase(isCategoryAddedAction, (state) => {
-      state.isAdded = true;
-    });
+	name: "category",
+	initialState: {},
+	extraReducers: (builder) => {
+		builder.addCase(isCategoryAddedAction, (state) => {
+			state.isAdded = true;
+		});
 
-    builder
-      .addCase(addCategory.pending, (state) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(addCategory.fulfilled, (state, action) => {
-        state.category = action?.payload;
-        state.loading = false;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(addCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.serverErr = action?.error?.message;
-      });
+		builder
+			.addCase(addCategory.pending, (state) => {
+				state.loading = true;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(addCategory.fulfilled, (state, action) => {
+				state.category = action?.payload;
+				state.loading = false;
+				state.isAdded = false;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(addCategory.rejected, (state, action) => {
+				state.loading = false;
+				state.appErr = action?.payload?.message;
+				state.serverErr = action?.error?.message;
+			});
 
-    builder
-      .addCase(categories.pending, (state) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(categories.fulfilled, (state, action) => {
-        state.categoryList = action?.payload;
-        state.loading = false;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(categories.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.serverErr = action?.error?.message;
-      });
+		builder
+			.addCase(categories.pending, (state) => {
+				state.loading = true;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(categories.fulfilled, (state, action) => {
+				state.categoryList = action?.payload;
+				state.loading = false;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(categories.rejected, (state, action) => {
+				state.loading = false;
+				state.appErr = action?.payload?.message;
+				state.serverErr = action?.error?.message;
+			});
 
-    builder
-      .addCase(getCategory.pending, (state) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(getCategory.fulfilled, (state, action) => {
-        state.category = action?.payload;
-        state.loading = false;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(getCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.serverErr = action?.error?.message;
-      });
+		builder
+			.addCase(getCategory.pending, (state) => {
+				state.loading = true;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(getCategory.fulfilled, (state, action) => {
+				state.category = action?.payload;
+				state.loading = false;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(getCategory.rejected, (state, action) => {
+				state.loading = false;
+				state.appErr = action?.payload?.message;
+				state.serverErr = action?.error?.message;
+			});
 
-    builder.addCase(isCategoryUpdatedAction, (state) => {
-      state.isEdited = true;
-    });
+		builder.addCase(isCategoryUpdatedAction, (state) => {
+			state.isEdited = true;
+		});
 
-    builder
-      .addCase(updateCategory.pending, (state) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(updateCategory.fulfilled, (state, action) => {
-        state.categoryUpdated = action?.payload;
-        state.isEdited = false;
-        state.loading = false;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(updateCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.serverErr = action?.error?.message;
-      });
+		builder
+			.addCase(updateCategory.pending, (state) => {
+				state.loading = true;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(updateCategory.fulfilled, (state, action) => {
+				state.categoryUpdated = action?.payload;
+				state.isEdited = false;
+				state.loading = false;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(updateCategory.rejected, (state, action) => {
+				state.loading = false;
+				state.appErr = action?.payload?.message;
+				state.serverErr = action?.error?.message;
+			});
 
-    builder.addCase(isCategoryDeletedAction, (state) => {
-      state.isDeleted = true;
-    });
+		builder.addCase(isCategoryDeletedAction, (state) => {
+			state.isDeleted = true;
+		});
 
-    builder
-      .addCase(deleteCategory.pending, (state) => {
-        state.loading = true;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(deleteCategory.fulfilled, (state, action) => {
-        state.categoryDeleted = action?.payload;
-        state.loading = false;
-        state.isDeleted = false;
-        state.appErr = undefined;
-        state.serverErr = undefined;
-      })
-      .addCase(deleteCategory.rejected, (state, action) => {
-        state.loading = false;
-        state.appErr = action?.payload?.message;
-        state.serverErr = action?.error?.message;
-      });
-  },
+		builder
+			.addCase(deleteCategory.pending, (state) => {
+				state.loading = true;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(deleteCategory.fulfilled, (state, action) => {
+				state.categoryDeleted = action?.payload;
+				state.loading = false;
+				state.isDeleted = false;
+				state.appErr = undefined;
+				state.serverErr = undefined;
+			})
+			.addCase(deleteCategory.rejected, (state, action) => {
+				state.loading = false;
+				state.appErr = action?.payload?.message;
+				state.serverErr = action?.error?.message;
+			});
+	},
 });
 
 export default categoriesSlices.reducer;

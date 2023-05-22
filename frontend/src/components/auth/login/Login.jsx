@@ -23,10 +23,7 @@ const Login = () => {
 			password: "",
 		},
 		validationSchema: formSchema,
-		onSubmit: (values) => {
-			dispatch(login(values));
-			console.log(values);
-		},
+		onSubmit: (values) => dispatch(login(values)),
 	});
 
 	const { email, password } = formik.values;
