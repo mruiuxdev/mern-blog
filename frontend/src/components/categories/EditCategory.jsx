@@ -1,37 +1,56 @@
+import { Navigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 import { BookOpenIcon } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { addCategory } from "../../redux/slices/categories/categoriesSlides";
-import { Navigate } from "react-router-dom";
+import {
+  deleteCategory,
+  getCategory,
+  updateCategory,
+} from "../../redux/slices/categories/categoriesSlides";
 
 const formSchema = Yup.object({
   title: Yup.string().required("Category is required"),
 });
 
-const AddCategory = () => {
+const EditCategory = () => {
+  const { categoryId } = useParams();
+
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getCategory(categoryId));
+  }, [dispatch, categoryId]);
+
+  const storeData = useSelector((store) => store?.categories);
+
+  const { loading, appErr, serverErr, category, isEdited, isDeleted } =
+    storeData;
+
   const formik = useFormik({
-    initialValues: { title: "" },
+    enableReinitialize: true,
+    initialValues: {
+      title: category?.title === undefined ? "" : category?.title,
+    },
     validationSchema: formSchema,
     onSubmit: async (values, { resetForm }) => {
-      await dispatch(addCategory(values)).then(() => resetForm());
+      await dispatch(updateCategory({ title: values.title, categoryId })).then(
+        () => resetForm()
+      );
     },
   });
 
   const { title } = formik.values;
 
-  const storeData = useSelector((store) => store?.categories);
-
-  const { loading, appErr, serverErr, isAdded } = storeData;
-
-  if (isAdded) return <Navigate to="/categories" />;
+  if (isEdited || isDeleted) return <Navigate to="/categories" replace />;
 
   return (
     <>
+      <ToastContainer />
       <div className="w-screen main flex content-center items-center relative isolate px-6 lg:px-8">
         <div
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80  pointer-events-none"
@@ -48,7 +67,7 @@ const AddCategory = () => {
         <div className="mx-auto w-1/2">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
             <h1 className="text-4xl mb-5 font-bold capitalize tracking-tight text-gray-900">
-              Add New Category
+              Update Category
             </h1>
             <p className="text-center text-sm text-gray-500">
               There are the categories use will select when creating a post
@@ -87,12 +106,20 @@ const AddCategory = () => {
                     <BeatLoader color="#fff" size={10} />
                   </button>
                 ) : (
-                  <button
-                    type="submit"
-                    className="flex w-full justify-center rounded-full bg-blue-600 px-3 py-3 font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                  >
-                    Add New
-                  </button>
+                  <div className="flex gap-5">
+                    <button
+                      type="submit"
+                      className="flex w-full justify-center rounded-full bg-blue-600 px-3 py-3 font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    >
+                      Update
+                    </button>
+                    <button
+                      className="flex w-full justify-center rounded-full bg-red-600 px-3 py-3 font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                      onClick={() => dispatch(deleteCategory({ categoryId }))}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 )}
               </div>
             </form>
@@ -127,4 +154,4 @@ const AddCategory = () => {
   );
 };
 
-export default AddCategory;
+export default EditCategory;

@@ -1,8 +1,10 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Moment from "react-moment";
 import { categories } from "../../redux/slices/categories/categoriesSlides";
 import Loader from "../loader/Loader";
+import { Edit2 } from "react-feather";
 
 const CategoryList = () => {
   const dispatch = useDispatch();
@@ -104,12 +106,17 @@ const CategoryList = () => {
                               <Moment format="DD/MM/YYYY">{createdAt}</Moment>
                             </td>
                             <td className="py-4 px-6 text-sm font-medium text-right whitespace-nowrap">
-                              <a
-                                href="/"
-                                className="text-blue-600 dark:text-blue-500 hover:underline"
+                              <Link
+                                to={`/edit-category/${_id}`}
+                                className="text-blue-600 flex items-center dark:text-blue-500 hover:underline"
                               >
+                                <Edit2
+                                  width={12}
+                                  height={12}
+                                  className="mr-1"
+                                />{" "}
                                 Edit
-                              </a>
+                              </Link>
                             </td>
                           </tr>
                         );
