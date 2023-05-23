@@ -67,13 +67,12 @@ const AdminNavbar = () => {
 					</Link>
 				</Popover.Group>
 				<div className="hidden lg:flex items-center lg:flex-1 lg:justify-end">
-					<a
-						href="/"
-						type="submit"
+					<Link
+						to="/add-post"
 						className="flex justify-center rounded-full text-blue-600 border-2 border-blue-600 px-5 py-2 mr-3 font-semibold leading-6 shadow-sm hover:bg-blue-500 hover:text-white hover:border-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-all"
 					>
 						Create Article
-					</a>
+					</Link>
 					<Menu as="div" className="relative ml-3">
 						<div>
 							<Menu.Button className="flex max-w-xs items-center rounded-full border-2 border-blue-600 bg-gray-800 text-sm focus:outline-none ">
