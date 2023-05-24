@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Moment from "react-moment";
-import { categories } from "../../redux/slices/categories/categoriesSlides";
+import { getCategories } from "../../redux/slices/categories/categoriesSlides";
 import Loader from "../loader/Loader";
 import { Edit2 } from "react-feather";
 
@@ -10,7 +10,7 @@ const CategoryList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(categories());
+    dispatch(getCategories());
   }, [dispatch]);
 
   const categoriesData = useSelector((state) => state?.categories);
@@ -72,7 +72,7 @@ const CategoryList = () => {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                      {categoryList.map((cat) => {
+                      {categoryList?.map((cat) => {
                         const {
                           _id,
                           user: { firstName, lastName, profilePhoto, email },
