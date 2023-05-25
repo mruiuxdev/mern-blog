@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { User, List, Book, Image } from "react-feather";
@@ -46,12 +46,12 @@ const AddPost = () => {
     };
   });
 
-  const { appErr, loading } = storeData?.posts;
+  const { appErr, loading, isAdded } = storeData?.posts;
   const categories = storeData?.categories;
 
-  // useEffect(() => {
-  // 	if (registered) return navigate("/profile");
-  // }, [registered, navigate]);
+  useEffect(() => {
+    if (isAdded) return navigate("/posts");
+  }, [isAdded, navigate]);
 
   return (
     <div className="w-screen main flex content-center items-center relative isolate px-6 lg:px-8">
@@ -153,53 +153,65 @@ const AddPost = () => {
                 <Image className="w-4 h-4 mr-2" /> Poster
               </label>
               <div className="mt-2 relative">
-                <Dropzone
-                  onDrop={(acceptedFiles) => {
-                    formik.setFieldValue("image", acceptedFiles[0]);
-                  }}
-                  accept="image/jpeg, image/png"
-                  onBlur={formik.handleBlur("images")}
-                >
-                  {({ getRootProps, getInputProps }) => {
-                    return (
-                      <div className="container">
-                        <div
-                          {...getRootProps({
-                            className: "dropzone",
-                            onDrop: (e) => e.stopPropagation(),
-                          })}
-                        >
-                          <input {...getInputProps()} />
-                          <div className="flex-col items-center bg-white justify-center text-center pt-5 pb-6 block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300">
-                            <svg
-                              className="w-10 mx-auto h-10 mb-3 text-gray-400"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
+                <>
+                  <Dropzone
+                    onDrop={(acceptedFiles) => {
+                      formik.setFieldValue("image", acceptedFiles[0]);
+                    }}
+                    accept={{ "image/jpeg": [], "image/png": [] }}
+                    onBlur={formik.handleBlur("images")}
+                  >
+                    {({ getRootProps, getInputProps, acceptedFiles }) => {
+                      return (
+                        <>
+                          <div className="container mb-2">
+                            <div
+                              {...getRootProps({
+                                className: "dropzone",
+                                onDrop: (e) => e.stopPropagation(),
+                              })}
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                              ></path>
-                            </svg>
-                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                              <span className="font-semibold">
-                                Click to upload
-                              </span>{" "}
-                              or drag and drop
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              PNG, JPG
-                            </p>
+                              <input {...getInputProps()} />
+                              <div className="flex-col items-center bg-white justify-center text-center pt-5 pb-6 block w-full rounded-lg border-0 py-3 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300">
+                                <svg
+                                  className="w-10 mx-auto h-10 mb-3 text-gray-400"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                  ></path>
+                                </svg>
+                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                                  <span className="font-semibold">
+                                    Click to upload
+                                  </span>{" "}
+                                  or drag and drop
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">
+                                  PNG, JPG
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  }}
-                </Dropzone>
+                          {acceptedFiles.map((file) => (
+                            <span
+                              className="text-sm rounded-full bg-green-300 text-green-700 py-1 px-2"
+                              key={file.path}
+                            >
+                              {file.path} - {file.size} bytes
+                            </span>
+                          ))}
+                        </>
+                      );
+                    }}
+                  </Dropzone>
+                </>
               </div>
             </div>
             <div className="mt-12">

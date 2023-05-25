@@ -13,36 +13,38 @@ import PrivateProtectedRoute from "./components/navigation/protectedRoute/Privat
 import AdminProtectedRoute from "./components/navigation/protectedRoute/AdminProtectedRoute";
 import NoAccess from "./components/no-access/NoAccess";
 import AddPost from "./components/posts/AddPost";
+import Posts from "./components/posts/Posts";
 
 function App() {
-	return (
-		<>
-			<ToastContainer />
-			<BrowserRouter>
-				<Navbar />
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/register" element={<Register />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/profile" element={<Profile />} />
-					<Route element={<PrivateProtectedRoute />}>
-						<Route path="/add-category" element={<AddCategory />} />
-						<Route path="/add-post" element={<AddPost />} />
-					</Route>
-					<Route element={<AdminProtectedRoute />}>
-						<Route
-							path="/edit-category/:categoryId"
-							element={<EditCategory />}
-						/>
-						<Route path="/categories" element={<CategoryList />} />
-						<Route path="/add-post" element={<AddPost />} />
-					</Route>
-					<Route path="/no-access" element={<NoAccess />} />
-					<Route path="*" element={<NotFound />} />
-				</Routes>
-			</BrowserRouter>
-		</>
-	);
+  return (
+    <>
+      <ToastContainer />
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route element={<PrivateProtectedRoute />}>
+            <Route path="/add-category" element={<AddCategory />} />
+            <Route path="/add-post" element={<AddPost />} />
+          </Route>
+          <Route element={<AdminProtectedRoute />}>
+            <Route
+              path="/edit-category/:categoryId"
+              element={<EditCategory />}
+            />
+            <Route path="/categories" element={<CategoryList />} />
+            <Route path="/add-post" element={<AddPost />} />
+          </Route>
+          <Route path="/posts" element={<Posts />} />
+          <Route path="/no-access" element={<NoAccess />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
 
 export default App;
