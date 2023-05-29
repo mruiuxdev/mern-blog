@@ -176,7 +176,7 @@ const like = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(postId);
 
   const isAlreadyDisliked = post.dislikes.find(
-    (userId) => userId.toString() === _id.toString()
+    (user) => user.toString() === _id.toString()
   );
 
   const isLiked = post.isLiked;
@@ -224,7 +224,7 @@ const dislike = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(postId);
 
   const isAlreadyLiked = post.likes.find(
-    (userId) => userId.toString() === _id.toString()
+    (user) => user.toString() === _id.toString()
   );
 
   const isDisliked = post.isDisliked;
